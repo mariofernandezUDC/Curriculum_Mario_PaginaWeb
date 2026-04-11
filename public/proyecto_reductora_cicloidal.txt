@@ -1,0 +1,12 @@
+Proyecto: Reductora Cicloidal Optimizada
+
+Este archivo es un placeholder para la descarga del proyecto.
+Sustituyelo por tu documento final (PDF/ZIP) manteniendo la URL:
+/proyecto_reductora_cicloidal.txt
+
+Contenido recomendado del entregable:
+- Objetivo del proyecto
+- Metodologia de diseno
+- Optimizacion (NSGA-II)
+- Resultados tecnicos
+- Conclusiones
