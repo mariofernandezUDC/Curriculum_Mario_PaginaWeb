@@ -3,6 +3,7 @@ import { Cog, Cpu, Gauge, Mail, Send, X } from 'lucide-react';
 import { Language } from '../constants';
 import RotatingModel from './RotatingModel';
 import { withBasePath } from '../utils/paths';
+import { PRIVACY_NOTICE, PRIVACY_POLICY_URL } from '../utils/privacy';
 
 const PROJECT_ACCESS_DESTINATION_EMAIL = 'mariofdezrguez4@gmail.com';
 const PROJECT_ACCESS_REQUEST_ENDPOINT = `https://formsubmit.co/ajax/${PROJECT_ACCESS_DESTINATION_EMAIL}`;
@@ -44,8 +45,11 @@ interface ProjectAccessRequestForm {
   email: string;
   organization: string;
   message: string;
+  privacyAccepted: boolean;
   website: string;
 }
+
+type ProjectAccessRequestTextField = 'fullName' | 'email' | 'organization' | 'message' | 'website';
 
 interface OpenStageProps {
   children: React.ReactNode;
@@ -85,6 +89,7 @@ const OpenStage: React.FC<OpenStageProps> = ({
 );
 
 const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
+  const privacyNotice = PRIVACY_NOTICE[language];
   const copy = useMemo(
     () =>
       language === 'es'
@@ -219,6 +224,7 @@ const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
     email: '',
     organization: '',
     message: '',
+    privacyAccepted: false,
     website: '',
   });
 
@@ -340,7 +346,7 @@ const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
   };
 
   const handleRequestInputChange =
-    (field: keyof ProjectAccessRequestForm) =>
+    (field: ProjectAccessRequestTextField) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setRequestForm((currentForm) => ({ ...currentForm, [field]: event.target.value }));
 
@@ -350,6 +356,15 @@ const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
       }
     };
 
+  const handleRequestPrivacyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRequestForm((currentForm) => ({ ...currentForm, privacyAccepted: event.target.checked }));
+
+    if (requestStatus !== 'idle') {
+      setRequestStatus('idle');
+      setRequestFeedback('');
+    }
+  };
+
   const handleAccessRequestSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -358,6 +373,7 @@ const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
       email: requestForm.email.trim(),
       organization: requestForm.organization.trim(),
       message: requestForm.message.trim(),
+      privacyAccepted: requestForm.privacyAccepted,
       website: requestForm.website.trim(),
     };
 
@@ -367,7 +383,7 @@ const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
       return;
     }
 
-    if (!normalizedForm.fullName || !normalizedForm.email) {
+    if (!normalizedForm.fullName || !normalizedForm.email || !normalizedForm.privacyAccepted) {
       return;
     }
 
@@ -390,6 +406,8 @@ const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
       formData.append('project', 'Reductora cicloidal');
       formData.append('language', language);
       formData.append('requested_at', new Date().toISOString());
+      formData.append('privacy_consent', language === 'es' ? 'Aceptada' : 'Accepted');
+      formData.append('privacy_policy', PRIVACY_POLICY_URL);
       formData.append('_subject', 'Solicitud de acceso al proyecto completo | Reductora cicloidal');
       formData.append('_template', 'table');
       formData.append('_url', typeof window === 'undefined' ? '' : window.location.href);
@@ -414,6 +432,7 @@ const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
         email: '',
         organization: '',
         message: '',
+        privacyAccepted: false,
         website: '',
       });
     } catch {
@@ -717,6 +736,34 @@ const ReductoraDetail: React.FC<ReductoraDetailProps> = ({ language }) => {
                     placeholder={copy.requestMessagePlaceholder}
                     className="w-full rounded-xl border border-white/12 bg-white/[0.03] px-4 py-3 text-sm text-white outline-none transition-colors focus:border-accent/45"
                   />
+                </div>
+
+                <div className="space-y-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                  <p className="text-xs leading-relaxed text-gray-300">
+                    {privacyNotice.summary} {privacyNotice.rights}
+                  </p>
+
+                  <label className="flex items-start gap-3 text-xs leading-relaxed text-gray-300">
+                    <input
+                      type="checkbox"
+                      required
+                      checked={requestForm.privacyAccepted}
+                      onChange={handleRequestPrivacyChange}
+                      className="mt-0.5 h-4 w-4 rounded border-white/20 bg-transparent text-accent focus:ring-accent"
+                    />
+                    <span>
+                      {privacyNotice.checkboxLabel}{' '}
+                      <a
+                        href={PRIVACY_POLICY_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-accent underline-offset-4 transition-colors hover:text-white hover:underline"
+                      >
+                        {privacyNotice.policyLinkLabel}
+                      </a>
+                      .
+                    </span>
+                  </label>
                 </div>
 
                 {requestFeedback ? (

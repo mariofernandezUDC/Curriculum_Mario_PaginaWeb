@@ -1,6 +1,7 @@
-﻿import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { Linkedin, Mail, X } from 'lucide-react';
 import { Language, UI_TEXT } from '../constants';
+import { PRIVACY_NOTICE, PRIVACY_POLICY_URL } from '../utils/privacy';
 
 interface FooterProps {
   language: Language;
@@ -14,15 +15,23 @@ const Footer: React.FC<FooterProps> = ({ language }) => {
   const authorName = 'Mario Fernández';
   const [senderEmail, setSenderEmail] = useState('');
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [hasAcceptedPrivacy, setHasAcceptedPrivacy] = useState(false);
 
   const emailInputPlaceholder = language === 'es' ? 'Tu correo electrónico' : 'Your email address';
   const modalTitle = language === 'es' ? 'Enviar correo' : 'Send email';
   const contactBadge = language === 'es' ? 'Contacto' : 'Contact';
   const submitLabel = language === 'es' ? 'Abrir correo' : 'Open email';
+  const privacyNotice = PRIVACY_NOTICE[language];
   const modalSubtitle =
     language === 'es'
       ? 'Antes de contactar, necesito registrar tu correo electrónico.'
       : 'Before contacting me, please provide your email address.';
+
+  const closeEmailModal = () => {
+    setIsEmailModalOpen(false);
+    setSenderEmail('');
+    setHasAcceptedPrivacy(false);
+  };
 
   useEffect(() => {
     if (!isEmailModalOpen) {
@@ -31,7 +40,7 @@ const Footer: React.FC<FooterProps> = ({ language }) => {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setIsEmailModalOpen(false);
+        closeEmailModal();
       }
     };
 
@@ -43,7 +52,7 @@ const Footer: React.FC<FooterProps> = ({ language }) => {
     event.preventDefault();
     const normalizedEmail = senderEmail.trim();
 
-    if (!normalizedEmail) {
+    if (!normalizedEmail || !hasAcceptedPrivacy) {
       return;
     }
 
@@ -53,8 +62,8 @@ const Footer: React.FC<FooterProps> = ({ language }) => {
         language === 'es' ? 'Mensaje' : 'Message'
       }:`,
     );
-    setIsEmailModalOpen(false);
-    setSenderEmail('');
+
+    closeEmailModal();
     window.location.href = `mailto:mariofdezrguez4@gmail.com?subject=${subject}&body=${body}`;
   };
 
@@ -110,7 +119,7 @@ const Footer: React.FC<FooterProps> = ({ language }) => {
             type="button"
             aria-label={language === 'es' ? 'Cerrar ventana' : 'Close window'}
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={() => setIsEmailModalOpen(false)}
+            onClick={closeEmailModal}
           />
 
           <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-accent/35 bg-[#0b0b0b] p-6 shadow-[0_0_55px_rgba(6,182,212,0.22)]">
@@ -118,7 +127,7 @@ const Footer: React.FC<FooterProps> = ({ language }) => {
 
             <button
               type="button"
-              onClick={() => setIsEmailModalOpen(false)}
+              onClick={closeEmailModal}
               className="absolute right-3 top-3 text-gray-500 transition-colors hover:text-white"
               aria-label={language === 'es' ? 'Cerrar' : 'Close'}
             >
@@ -138,6 +147,34 @@ const Footer: React.FC<FooterProps> = ({ language }) => {
                 placeholder={emailInputPlaceholder}
                 className="w-full rounded-lg border border-white/20 bg-black/20 px-3 py-2.5 text-sm text-gray-100 outline-none transition-colors focus:border-accent"
               />
+
+              <div className="space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                <p className="text-xs leading-relaxed text-gray-300">
+                  {privacyNotice.summary} {privacyNotice.rights}
+                </p>
+
+                <label className="flex items-start gap-3 text-xs leading-relaxed text-gray-300">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={hasAcceptedPrivacy}
+                    onChange={(event) => setHasAcceptedPrivacy(event.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-white/20 bg-transparent text-accent focus:ring-accent"
+                  />
+                  <span>
+                    {privacyNotice.checkboxLabel}{' '}
+                    <a
+                      href={PRIVACY_POLICY_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent underline-offset-4 transition-colors hover:text-white hover:underline"
+                    >
+                      {privacyNotice.policyLinkLabel}
+                    </a>
+                    .
+                  </span>
+                </label>
+              </div>
 
               <button
                 type="submit"
