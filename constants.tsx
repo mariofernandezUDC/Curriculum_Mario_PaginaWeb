@@ -107,6 +107,7 @@ const LOGO_URLS = {
   microsoft: withBasePath('contenido/Microsoft_logo.png'),
   sandvik: withBasePath('contenido/sandvik_logo.png'),
   bureauveritas: withBasePath('contenido/bureau_veritas_logo.png'),
+  ekium: withBasePath('contenido/LogoEkium.jpeg'),
   autodesk: 'https://cdn.simpleicons.org/autodesk/06b6d4',
   dassault: 'https://cdn.simpleicons.org/dassaultsystemes/06b6d4',
   arduino: 'https://cdn.simpleicons.org/arduino/06b6d4',
@@ -151,6 +152,15 @@ const EXPERIENCE_DATA: Record<Language, ExperienceItem[]> = {
   es: [
     {
       id: 'exp-1',
+      company: 'TechnoPro Hispania SL - Ekium',
+      logoUrl: LOGO_URLS.ekium,
+      role: 'Departamento de Conceptual, B\u00E1sica Naval e I+D',
+      period: 'Junio 2026 - Actualidad',
+      technologies: ['Ingenier\u00EDa conceptual', 'B\u00E1sica naval', 'I+D'],
+      isCurrent: true,
+    },
+    {
+      id: 'exp-2',
       company: 'Navantia',
       logoUrl: LOGO_URLS.navantia,
       companyUrl: 'https://www.navantia.es/es/',
@@ -160,7 +170,7 @@ const EXPERIENCE_DATA: Record<Language, ExperienceItem[]> = {
       isCurrent: true,
     },
     {
-      id: 'exp-2',
+      id: 'exp-3',
       company: 'Texas Controls',
       logoUrl: LOGO_URLS.texasControls,
       companyUrl: 'https://texascontrols.com/',
@@ -173,6 +183,15 @@ const EXPERIENCE_DATA: Record<Language, ExperienceItem[]> = {
   en: [
     {
       id: 'exp-1',
+      company: 'TechnoPro Hispania SL - Ekium',
+      logoUrl: LOGO_URLS.ekium,
+      role: 'Conceptual Engineering, Basic Naval Engineering, and R&D Department',
+      period: 'June 2026 - Present',
+      technologies: ['Conceptual engineering', 'Basic naval engineering', 'R&D'],
+      isCurrent: true,
+    },
+    {
+      id: 'exp-2',
       company: 'Navantia',
       logoUrl: LOGO_URLS.navantia,
       companyUrl: 'https://www.navantia.es/es/',
@@ -182,7 +201,7 @@ const EXPERIENCE_DATA: Record<Language, ExperienceItem[]> = {
       isCurrent: true,
     },
     {
-      id: 'exp-2',
+      id: 'exp-3',
       company: 'Texas Controls',
       logoUrl: LOGO_URLS.texasControls,
       companyUrl: 'https://texascontrols.com/',
