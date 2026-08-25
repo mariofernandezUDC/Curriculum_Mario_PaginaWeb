@@ -73,6 +73,7 @@ const PUBLISHED_CONTENT_FILES = [
   'rad_eolic.jpg',
   'Render_Taladro_Cicloidal_.STL',
   'sandvik_logo.png',
+  'technopro.png',
   'texas_logo.png',
   'Windchill_logo.png',
 ] as const;
